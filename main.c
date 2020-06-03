@@ -42,7 +42,7 @@ void delayNoUnits(int delayTime)
   for (int i = 0; i < delayTime; i++){;}
 }
 
-// This needs to be ran constantly (in a loop) or else the display will stop. Any delays will cause a dimmer display or tearing
+// This needs to be ran constantly or else the display will stop. Any delays will cause a dimmer display or tearing. This is ran from an interrupt at the momnet
 void sendDisplayData()
 {
        
@@ -83,10 +83,12 @@ void alarmWakeup(int sig_num)
 
 void setup()
 {
+  // Clear frame buffer
   memset(&frameBuffer, 0x00, GFX_WIDTH * GFX_HEIGHT);
   
   wiringPiSetup();
   
+  // Setup GPIO
   pinMode(SERIAL_OUT, OUTPUT);
   pinMode(CLK_OUT, OUTPUT);
   pinMode(OUT_DISABLE, OUTPUT);
@@ -99,9 +101,10 @@ void setup()
   pinMode(ROW_6, OUTPUT);
   digitalWrite(OUT_DISABLE, LOW);
   
+  // Setup Adafruit library
   gfx_init();
   
-  
+  // Setup screen update interrupt
   signal(SIGALRM, alarmWakeup);   
   ualarm(20000, 20000);
 }
@@ -135,14 +138,17 @@ int main()
   
   while (true)
   {
+	  
+	// Some examples statements:
+    //lcd_clear();
+    //gfx_setCursor(i - 30, 0);
+    //gfx_puts("memes");
+	  
+	// Makes moving rectangle:
     for (int i = 0; i < 5*12; i++)
     {
-      //lcd_clear();
-      //gfx_setCursor(i - 30, 0);
-      //gfx_puts("memes");
       gfx_fillRect(0, 0, i, 7, 1);
       delayNoUnits(200000);
-      //delayMicroseconds(1000000000);
     }
     
     
